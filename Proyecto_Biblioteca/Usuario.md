@@ -1,0 +1,49 @@
+# Librería Virtual
+
+¡Bienvenido a la **Librería Virtual**!  
+Este es un programa donde puedes **guardar, buscar, eliminar y ver libros**.  
+Lo usas desde la consola (pantalla negra donde escribes cosas).
+
+---
+
+# Te aparecerá un menú como este:
+
+Menú de Librería
+1. Agregar libro
+2. Buscar libro por título
+3. Eliminar libro por posición
+4. Mostrar todos los libros
+5. Salir
+
+# Elige una opción:
+
+
+Solo escribe el número que quieras de 1 a 5 y presiona Enter.
+
+---
+
+Ejemplos
+
+Agregar libro (opción 1):
+Título: Harry Potter
+Autor: J.K. Rowling
+ISBN: 1234
+
+
+Buscar libro (opción 2):
+Introduce el título a buscar: Harry Potter
+Libro encontrado: Libro{titulo='Harry Potter', autor='J.K. Rowling', isbn='1234'}
+
+
+Eliminar libro (opción 3):
+Introduce la posición a eliminar: 0
+Libro eliminado: Libro{titulo='Harry Potter', autor='J.K. Rowling', isbn='1234'}
+
+
+Mostrar libros (opción 4):
+Posición 0: Libro{titulo='Cien Años de Soledad', autor='Gabriel García Márquez', isbn='978-3-16-148410-0'}
+
+
+Salir (opción 5):
+
+Saliendo del programa...
