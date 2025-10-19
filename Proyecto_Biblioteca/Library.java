@@ -7,7 +7,7 @@ public class Library {
     private ArrayList<User> users;
     private LinkedList<Loan> loans;
     private Queue<User> waitList;
-    private Stack<String> undoStack;
+    private Stack<Action> undoStack;
 
     public Library() {
         books = new ArrayList<>();
@@ -21,7 +21,14 @@ public class Library {
 
     public void addBook(Book book) {
         books.add(book);
-        undoStack.push("Libro agregado: " + book.getTitulo());
+        undoStack.push(new Action("add", book, null));
+    }
+
+     public void removeBook(int index) {
+        if (index >= 0 && index < books.size()) {
+            Book eliminado = books.remove(index);
+            undoStack.push(new Action("remove", eliminado, null));
+        }
     }
 
     public Book searchBook(String titulo) {
@@ -35,12 +42,7 @@ public class Library {
         return null;
     }
 
-    public void removeBook(int index) {
-        if (index >= 0 && index < books.size()) {
-            Book eliminado = books.remove(index);
-            undoStack.push("Libro eliminado: " + eliminado.getTitulo());
-        }
-    }
+   
 
     public void displayAllBooks() {
     if (books.isEmpty()) {
@@ -60,7 +62,7 @@ public class Library {
 
     public void addUser(User user) {
         users.add(user);
-        undoStack.push("Usuario agregado: " + user.getNombre());
+        undoStack.push(new Action("addUser", null, user));
     }
 
     public User searchUser(String id) {
@@ -97,15 +99,14 @@ public class Library {
 
         Loan nuevo = new Loan(user, book);
         loans.add(nuevo);
-        undoStack.push("Préstamo: " + user.getNombre() + " -> " + book.getTitulo());
-        System.out.println("Préstamo registrado correctamente.");
+        undoStack.push(new Action("loan", book, user));
     }
 
     public void returnBook(String tituloLibro) {
         for (Loan l : loans) {
             if (l.getLibro().getTitulo().equalsIgnoreCase(tituloLibro) && !l.isDevuelto()) {
                 l.devolver();
-                undoStack.push("Devolución: " + l.getLibro().getTitulo());
+                undoStack.push(new Action("return", l.getLibro(), l.getUsuario()));
                 System.out.println("Libro devuelto con éxito.");
 
                 if (!waitList.isEmpty()) {
@@ -128,13 +129,43 @@ public class Library {
     // ------------------ Función deshacer ------------------
 
     public void undoLastAction() {
-        if (!undoStack.isEmpty()) {
-            String action = undoStack.pop();
-            System.out.println("Se deshizo la última acción: " + action);
-        } else {
-            System.out.println("No hay acciones para deshacer.");
+    if (undoStack.isEmpty()) {
+        System.out.println("No hay acciones para deshacer.");
+        return;
+    }
+
+    Action last = undoStack.pop();
+
+    switch (last.type) {
+        case "add":
+            books.remove(last.book);
+            System.out.println("Deshecho: se eliminó el libro " + last.book.getTitulo());
+            break;
+        case "remove":
+            books.add(last.book);
+            System.out.println("Deshecho: se volvió a agregar el libro " + last.book.getTitulo());
+            break;
+        case "loan":
+            loans.removeIf(l -> l.getLibro().equals(last.book) && l.getUsuario().equals(last.user));
+            System.out.println("Deshecho: préstamo cancelado de " + last.user.getNombre());
+            break;
+
+        case "addUser":
+            users.remove(last.user);
+            System.out.println("Deshecho: se eliminó el usuario " + last.user.getNombre());
+            break;
+
+        case "return":
+            loans.add(new Loan(last.user, last.book)); // simula que se devolvió
+            System.out.println("Deshecho: devolución revertida del libro " + last.book.getTitulo());
+            break;
+
+
+        default:
+            System.out.println("Tipo de acción desconocida.");
         }
     }
+
 
     // ------------------ Reportes ------------------
 
