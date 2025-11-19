@@ -1,5 +1,4 @@
 package Proyecto_Biblioteca;
-
 import java.util.*;
 
 public class Library {
@@ -41,8 +40,6 @@ public class Library {
         }
         return null;
     }
-
-   
 
     public void displayAllBooks() {
     if (books.isEmpty()) {
@@ -87,8 +84,7 @@ public class Library {
             System.out.println("Datos inválidos.");
             return;
         }
-
-        // Si el libro ya está prestado, agregar usuario a cola de espera
+        
         for (Loan l : loans) {
             if (l.getLibro().equals(book) && !l.isDevuelto()) {
                 waitList.add(user);
@@ -165,7 +161,6 @@ public class Library {
             System.out.println("Tipo de acción desconocida.");
         }
     }
-
 
     // ------------------ Reportes ------------------
 
